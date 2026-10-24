@@ -1,0 +1,22 @@
+* text=auto
+
+# Keep cross-platform Gradle wrappers usable
+/gradlew text eol=lf
+/gradlew.bat text eol=crlf
+
+# Normalize source, documentation, and configuration files
+*.java text eol=lf
+*.g4 text eol=lf
+*.gradle text eol=lf
+*.properties text eol=lf
+*.xml text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.interp text eol=lf
+*.tokens text eol=lf
+*.svg text eol=lf
+
+# Keep archives and binaries unchanged
+*.jar binary

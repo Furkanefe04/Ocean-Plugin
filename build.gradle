@@ -1,0 +1,63 @@
+
+plugins {
+    id 'java'
+    id 'antlr'
+    id 'org.jetbrains.intellij.platform' version '2.1.0'
+}
+
+repositories {
+    mavenCentral()
+    intellijPlatform {
+        defaultRepositories()
+    }
+}
+
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java', 'src/generated/java']
+        }
+    }
+}
+
+dependencies {
+    antlr "org.antlr:antlr4:4.13.1"
+    implementation "org.antlr:antlr4-runtime:4.13.1"
+    implementation "org.antlr:antlr4-intellij-adaptor:0.1"
+
+    intellijPlatform {
+        intellijIdeaCommunity "2023.3"
+        bundledPlugin "com.intellij.java"
+        instrumentationTools()
+    }
+    
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+
+compileJava.dependsOn generateGrammarSource
+
+intellijPlatform {
+    pluginConfiguration {
+        ideaVersion {
+            sinceBuild = "233"
+            untilBuild = provider { null }
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.named('buildSearchableOptions') {
+    enabled = false
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}

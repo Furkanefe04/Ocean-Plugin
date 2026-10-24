@@ -1,0 +1,187 @@
+<idea-plugin>
+    <id>ocean.plugin</id>
+    <name>Ocean</name>
+    <version>1.0.0</version>
+    <vendor>Furkan</vendor>
+
+    <description><![CDATA[
+        Ocean IntelliJ Plugin provides IntelliJ IDEA support for the Ocean V3 programming language and `.ocean` files.
+        <ul>
+            <li>ANTLR-based parsing, syntax and semantic highlighting, Ocean code style settings, and code formatting.</li>
+            <li>Context-aware completion, parameter information, live templates, and quick documentation.</li>
+            <li>PSI-based reference resolution and type inference, with semantic diagnostics for unresolved symbols, type and access errors, invalid overrides, and other language constraints.</li>
+            <li>Optional compiler-backed diagnostics from the installed Ocean compiler.</li>
+            <li>Inspections for unused symbols, unused imports, and unreachable statements, with applicable quick fixes.</li>
+            <li>Optimize Imports removes unused and duplicate imports and orders remaining imports by group; wildcard imports are preserved.</li>
+            <li>Navigation, find usages, folding, structure view, breadcrumbs, and rename, introduce-variable, extract-method, and inline-variable refactorings.</li>
+            <li>Code generation for constructors, getters/setters, equals/hashCode, method implementation, and overrides; file templates for classes, interfaces, enums, annotations, and data classes.</li>
+            <li>Ocean run configurations, a run action for <code>main</code>, console source links, and line-breakpoint placement.</li>
+        </ul>
+        Compiler-backed diagnostics and running Ocean programs require the separate Ocean compiler/runtime.
+    ]]></description>
+
+    <change-notes><![CDATA[
+        <h3>1.0.0 - Ocean V3 Parity Release</h3>
+        <ul>
+            <li>Full synchronization with Ocean V3 core grammar and compiler.</li>
+            <li>Added annotation declarations, sealed classes, data classes, async/await syntax support.</li>
+            <li>Upgraded type inference motor to full PSI/AST-driven system.</li>
+            <li>Added modern live templates and file creation wizards.</li>
+            <li>Improved formatter, breadcrumbs, parameter hints, and hover docs.</li>
+        </ul>
+    ]]></change-notes>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileType name="Ocean File"
+                  implementationClass="ocean.plugin.OceanFileType"
+                  fieldName="INSTANCE"
+                  language="Ocean"
+                  extensions="ocean"/>
+
+        <lang.parserDefinition language="Ocean"
+                               implementationClass="ocean.plugin.OceanParserDefinition"/>
+
+        <lang.syntaxHighlighterFactory language="Ocean"
+                                       implementationClass="ocean.plugin.OceanSyntaxHighlighterFactory"/>
+        <colorSettingsPage implementation="ocean.plugin.OceanColorSettingsPage"/>
+
+        <completion.contributor language="Ocean"
+                                implementationClass="ocean.plugin.OceanCompletionContributor"/>
+
+        <lang.braceMatcher language="Ocean"
+                           implementationClass="ocean.plugin.OceanPairedBraceMatcher"/>
+        <lang.quoteHandler language="Ocean"
+                           implementationClass="ocean.plugin.OceanQuoteHandler"/>
+        <lang.commenter language="Ocean"
+                        implementationClass="ocean.plugin.OceanCommenter"/>
+        <lang.formatter language="Ocean"
+                        implementationClass="ocean.plugin.format.OceanFormattingModelBuilder"/>
+        <lang.importOptimizer language="Ocean"
+                              implementationClass="ocean.plugin.imports.OceanImportOptimizer"/>
+        <localInspection language="Ocean"
+                         displayName="Compiler and semantic errors"
+                         groupName="Ocean"
+                         enabledByDefault="true"
+                         level="ERROR"
+                         implementationClass="ocean.plugin.inspections.OceanCompilerInspection"/>
+        <localInspection language="Ocean"
+                         displayName="Unused symbol"
+                         groupName="Ocean"
+                         enabledByDefault="true"
+                         level="WARNING"
+                         implementationClass="ocean.plugin.inspections.OceanUnusedSymbolInspection"/>
+        <localInspection language="Ocean"
+                         displayName="Unused import"
+                         groupName="Ocean"
+                         enabledByDefault="true"
+                         level="WARNING"
+                         implementationClass="ocean.plugin.inspections.OceanUnusedImportInspection"/>
+        <localInspection language="Ocean"
+                         displayName="Unreachable statement"
+                         groupName="Ocean"
+                         enabledByDefault="true"
+                         level="WARNING"
+                         implementationClass="ocean.plugin.inspections.OceanUnreachableCodeInspection"/>
+        <langCodeStyleSettingsProvider implementation="ocean.plugin.format.OceanLanguageCodeStyleSettingsProvider"/>
+        <lang.findUsagesProvider language="Ocean"
+                                 implementationClass="ocean.plugin.OceanFindUsagesProvider"/>
+        <lang.namesValidator language="Ocean"
+                             implementationClass="ocean.plugin.OceanNamesValidator"/>
+        <lang.foldingBuilder language="Ocean"
+                             implementationClass="ocean.plugin.OceanFoldingBuilder"/>
+        <lang.documentationProvider language="Ocean"
+                                    implementationClass="ocean.plugin.OceanDocumentationProvider"/>
+        <extendWordSelectionHandler implementation="ocean.plugin.editor.OceanExtendWordSelectionHandler"/>
+        <statementUpDownMover implementation="ocean.plugin.editor.OceanStatementUpDownMover"/>
+        <annotator language="Ocean"
+                   implementationClass="ocean.plugin.OceanAnnotator"/>
+
+        <lang.psiStructureViewFactory language="Ocean"
+                                      implementationClass="ocean.plugin.OceanStructureViewFactory"/>
+
+        <intentionAction>
+            <language>Ocean</language>
+            <className>ocean.plugin.OceanImplementMethodsAction</className>
+            <category>Ocean</category>
+        </intentionAction>
+        <intentionAction>
+            <language>Ocean</language>
+            <className>ocean.plugin.quickfix.OceanCreateMethodQuickFix</className>
+            <category>Ocean</category>
+        </intentionAction>
+        <intentionAction>
+            <language>Ocean</language>
+            <className>ocean.plugin.quickfix.OceanCreateFieldQuickFix</className>
+            <category>Ocean</category>
+        </intentionAction>
+
+        <moduleType id="OCEAN_MODULE_TYPE"
+                    implementationClass="ocean.plugin.OceanModuleType"/>
+
+        <moduleBuilder builderClass="ocean.plugin.OceanModuleBuilder"
+                       id="OCEAN_BUILDER"
+                       order="last"/>
+        <fileTemplateGroup implementation="ocean.plugin.OceanFileTemplateFactory"/>
+
+        <configurationType implementation="ocean.plugin.run.OceanConfigurationType"/>
+        <runConfigurationProducer implementation="ocean.plugin.run.OceanRunConfigurationProducer"/>
+
+        <applicationService serviceImplementation="ocean.plugin.settings.OceanSettingsState"/>
+        <projectConfigurable groupId="language"
+                             displayName="Ocean"
+                             instance="ocean.plugin.settings.OceanSettingsConfigurable"/>
+
+        <psi.referenceContributor language="Ocean"
+                                  implementationClass="ocean.plugin.psi.OceanReferenceContributor"/>
+        <gotoDeclarationHandler implementation="ocean.plugin.OceanGotoDeclarationHandler"/>
+        <targetElementEvaluator language="Ocean"
+                                implementationClass="ocean.plugin.OceanTargetElementEvaluator"/>
+
+        <lang.refactoringSupport language="Ocean"
+                                 implementationClass="ocean.plugin.refactoring.OceanRefactoringSupport"/>
+        <inlineActionHandler implementation="ocean.plugin.refactoring.OceanInlineVariableActionHandler"/>
+        <xdebugger.breakpointType implementation="ocean.plugin.debug.OceanLineBreakpointType"/>
+        <externalAnnotator language="Ocean"
+                           implementationClass="ocean.plugin.annotator.OceanExternalAnnotator"/>
+        
+        <lang.parameterInfo language="Ocean"
+                            implementationClass="ocean.plugin.OceanParameterInfoHandler"/>
+        <runLineMarkerContributor language="Ocean"
+                                  implementationClass="ocean.plugin.run.OceanRunLineMarkerContributor"/>
+        <defaultLiveTemplatesProvider implementation="ocean.plugin.OceanLiveTemplatesProvider"/>
+        <liveTemplateContext contextId="OCEAN" implementation="ocean.plugin.OceanTemplateContextType"/>
+        <codeInsight.lineMarkerProvider language="Ocean"
+                                        implementationClass="ocean.plugin.OceanOverrideLineMarkerProvider"/>
+        <breadcrumbsInfoProvider implementation="ocean.plugin.OceanBreadcrumbsProvider"/>
+
+        <gotoClassModelContributor implementation="ocean.plugin.navigation.OceanChooseByNameContributor"/>
+        <gotoSymbolModelContributor implementation="ocean.plugin.navigation.OceanChooseByNameContributor"/>
+    </extensions>
+
+    <actions>
+        <action id="Ocean.NewFile" class="ocean.plugin.OceanCreateFileAction"
+                text="Ocean File" description="Create a new Ocean file">
+            <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFile"/>
+        </action>
+        <action id="Ocean.GenerateConstructor" class="ocean.plugin.OceanGenerateConstructorAction"
+                text="Constructor..." description="Generate Ocean class constructor">
+            <add-to-group group-id="GenerateGroup" anchor="last"/>
+        </action>
+        <action id="Ocean.GenerateGettersSetters" class="ocean.plugin.OceanGenerateGettersSettersAction"
+                text="Getters and Setters..." description="Generate Ocean class getters and setters">
+            <add-to-group group-id="GenerateGroup" anchor="last"/>
+        </action>
+        <action id="Ocean.GenerateOverride" class="ocean.plugin.OceanOverrideMethodAction"
+                text="Override Methods..." description="Override virtual methods">
+            <add-to-group group-id="GenerateGroup" anchor="last"/>
+        </action>
+        <action id="Ocean.GenerateEqualsHashCode" class="ocean.plugin.OceanGenerateEqualsHashCodeAction"
+                text="equals() and hashCode()..." description="Generate Ocean equals and hashCode methods">
+            <add-to-group group-id="GenerateGroup" anchor="last"/>
+        </action>
+    </actions>
+</idea-plugin>
+

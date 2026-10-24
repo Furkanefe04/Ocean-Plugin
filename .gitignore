@@ -1,0 +1,37 @@
+# Gradle caches and generated build output
+.gradle/
+build/
+/dist/
+
+# IntelliJ Platform Gradle Plugin downloads and local state
+.intellijPlatform/
+
+# IDE-local project state
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+*.code-workspace
+
+# Compiled output
+/bin/
+/out/
+
+# Local environment and signing credentials
+.env
+.env.*
+!.env.example
+*.jks
+*.keystore
+*.p12
+*.pfx
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Logs and JVM crash reports
+*.log
+hs_err_pid*
+replay_pid*

@@ -1,0 +1,96 @@
+<templateSet group="Ocean">
+    <template name="out" value="OceanOutput($EXPRESSION$);" description="Prints to console output" toReformat="true" toShortenFQNames="true">
+        <variable name="EXPRESSION" expression="" defaultValue="&quot;&quot;" alwaysStopAt="true"/>
+        <context>
+            <option name="OCEAN" value="true"/>
+        </context>
+    </template>
+    <template name="sout" value="OceanOutput($EXPRESSION$);" description="Prints to console output" toReformat="true" toShortenFQNames="true">
+        <variable name="EXPRESSION" expression="" defaultValue="&quot;&quot;" alwaysStopAt="true"/>
+        <context>
+            <option name="OCEAN" value="true"/>
+        </context>
+    </template>
+    <template name="main" value="main(String[] args) {&#10;    $END$&#10;}" description="Main method declaration" toReformat="true" toShortenFQNames="true">
+        <context>
+            <option name="OCEAN" value="true"/>
+        </context>
+    </template>
+    <template name="fun" value="$ACCESS$ $RET_TYPE$ function $NAME$($PARAMS$) {&#10;    $END$&#10;}" description="Function declaration" toReformat="true" toShortenFQNames="true">
+        <variable name="ACCESS" expression="" defaultValue="&quot;public&quot;" alwaysStopAt="true"/>
+        <variable name="RET_TYPE" expression="" defaultValue="&quot;void&quot;" alwaysStopAt="true"/>
+        <variable name="NAME" expression="" defaultValue="&quot;myFunction&quot;" alwaysStopAt="true"/>
+        <variable name="PARAMS" expression="" defaultValue="" alwaysStopAt="true"/>
+        <context>
+            <option name="OCEAN" value="true"/>
+        </context>
+    </template>
+    <template name="function" value="$ACCESS$ $RET_TYPE$ function $NAME$($PARAMS$) {&#10;    $END$&#10;}" description="Function declaration" toReformat="true" toShortenFQNames="true">
+        <variable name="ACCESS" expression="" defaultValue="&quot;public&quot;" alwaysStopAt="true"/>
+        <variable name="RET_TYPE" expression="" defaultValue="&quot;void&quot;" alwaysStopAt="true"/>
+        <variable name="NAME" expression="" defaultValue="&quot;myFunction&quot;" alwaysStopAt="true"/>
+        <variable name="PARAMS" expression="" defaultValue="" alwaysStopAt="true"/>
+        <context>
+            <option name="OCEAN" value="true"/>
+        </context>
+    </template>
+    <template name="asyncfun" value="$ACCESS$ async $RET_TYPE$ function $NAME$($PARAMS$) {&#10;    $END$&#10;}" description="Async function declaration" toReformat="true" toShortenFQNames="true">
+        <variable name="ACCESS" expression="" defaultValue="&quot;public&quot;" alwaysStopAt="true"/>
+        <variable name="RET_TYPE" expression="" defaultValue="&quot;void&quot;" alwaysStopAt="true"/>
+        <variable name="NAME" expression="" defaultValue="&quot;myAsyncFunction&quot;" alwaysStopAt="true"/>
+        <variable name="PARAMS" expression="" defaultValue="" alwaysStopAt="true"/>
+        <context>
+            <option name="OCEAN" value="true"/>
+        </context>
+    </template>
+    <template name="data" value="data class $NAME$($PARAMS$) {&#10;    $END$&#10;}" description="Data class declaration" toReformat="true" toShortenFQNames="true">
+        <variable name="NAME" expression="" defaultValue="&quot;MyData&quot;" alwaysStopAt="true"/>
+        <variable name="PARAMS" expression="" defaultValue="" alwaysStopAt="true"/>
+        <context>
+            <option name="OCEAN" value="true"/>
+        </context>
+    </template>
+    <template name="anno" value="annotation $NAME$ {&#10;    $END$&#10;}" description="Annotation declaration" toReformat="true" toShortenFQNames="true">
+        <variable name="NAME" expression="" defaultValue="&quot;MyAnnotation&quot;" alwaysStopAt="true"/>
+        <context>
+            <option name="OCEAN" value="true"/>
+        </context>
+    </template>
+    <template name="sealed" value="sealed class $NAME$ restricts $PERMITTED$ {&#10;    $END$&#10;}" description="Sealed class declaration" toReformat="true" toShortenFQNames="true">
+        <variable name="NAME" expression="" defaultValue="&quot;MySealedClass&quot;" alwaysStopAt="true"/>
+        <variable name="PERMITTED" expression="" defaultValue="&quot;ChildA, ChildB&quot;" alwaysStopAt="true"/>
+        <context>
+            <option name="OCEAN" value="true"/>
+        </context>
+    </template>
+    <template name="for" value="for ($TYPE$ $VAR$ from $START$ to $END$ with increasing $STEP$) {&#10;    $END$&#10;}" description="For range loop" toReformat="true" toShortenFQNames="true">
+        <variable name="TYPE" expression="" defaultValue="&quot;int&quot;" alwaysStopAt="true"/>
+        <variable name="VAR" expression="" defaultValue="&quot;i&quot;" alwaysStopAt="true"/>
+        <variable name="START" expression="" defaultValue="&quot;1&quot;" alwaysStopAt="true"/>
+        <variable name="END" expression="" defaultValue="&quot;10&quot;" alwaysStopAt="true"/>
+        <variable name="STEP" expression="" defaultValue="&quot;1&quot;" alwaysStopAt="true"/>
+        <context>
+            <option name="OCEAN" value="true"/>
+        </context>
+    </template>
+    <template name="forin" value="for (variable $ITEM$ in $COLLECTION$) {&#10;    $END$&#10;}" description="For-in collection loop" toReformat="true" toShortenFQNames="true">
+        <variable name="ITEM" expression="" defaultValue="&quot;item&quot;" alwaysStopAt="true"/>
+        <variable name="COLLECTION" expression="" defaultValue="&quot;list&quot;" alwaysStopAt="true"/>
+        <context>
+            <option name="OCEAN" value="true"/>
+        </context>
+    </template>
+    <template name="trying" value="trying {&#10;    $END$&#10;} catch (Exception $EX$) {&#10;    OceanOutput($EX$.getMessage());&#10;}" description="Trying-catch error handling block" toReformat="true" toShortenFQNames="true">
+        <variable name="EX" expression="" defaultValue="&quot;e&quot;" alwaysStopAt="true"/>
+        <context>
+            <option name="OCEAN" value="true"/>
+        </context>
+    </template>
+    <template name="switch" value="switch ($EXPR$) {&#10;    case $CASE1$ -> {&#10;        $END$&#10;    }&#10;    default -> {&#10;    }&#10;}" description="Switch pattern matching block" toReformat="true" toShortenFQNames="true">
+        <variable name="EXPR" expression="" defaultValue="&quot;value&quot;" alwaysStopAt="true"/>
+        <variable name="CASE1" expression="" defaultValue="&quot;1&quot;" alwaysStopAt="true"/>
+        <context>
+            <option name="OCEAN" value="true"/>
+        </context>
+    </template>
+</templateSet>
