@@ -132,18 +132,25 @@ public class OceanRunProfileState extends CommandLineState {
         if (oceanHome == null || oceanHome.trim().isEmpty()) {
             oceanHome = System.getenv("OCEAN_HOME");
         }
+        return resolveOceanExecutable(oceanHome, findOSName());
+    }
+
+    public static String resolveOceanExecutable(String oceanHome, String osName) {
+        boolean isWindows = osName != null && osName.toLowerCase(java.util.Locale.ROOT).contains("windows");
         if (oceanHome != null && !oceanHome.trim().isEmpty()) {
             File home = new File(oceanHome);
-            String[] candidates = new String[] {
-                    "ocean.bat", "ocean.cmd", "ocean",
-                    "bin/ocean.bat", "bin/ocean.cmd", "bin/ocean"
-            };
+            String[] candidates = isWindows
+                    ? new String[] {"ocean.bat", "ocean.cmd", "ocean.exe", "ocean", "bin/ocean.bat", "bin/ocean.cmd", "bin/ocean.exe", "bin/ocean"}
+                    : new String[] {"ocean", "bin/ocean"};
             for (String c : candidates) {
                 File f = new File(home, c);
-                if (f.exists()) return f.getAbsolutePath();
+                if (f.isFile()) return f.getAbsolutePath();
             }
         }
-        boolean isWindows = System.getProperty("os.name", "").toLowerCase().contains("win");
         return isWindows ? "ocean.bat" : "ocean";
+    }
+
+    public static String findOSName(){
+        return System.getProperty("os.name", "").toLowerCase(java.util.Locale.ROOT);
     }
 }

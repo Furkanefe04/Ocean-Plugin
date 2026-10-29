@@ -194,6 +194,9 @@ public class OceanIntroduceVariableHandler implements RefactoringActionHandler {
         if (type.startsWith("ocean.stdlib.")) {
             type = type.substring("ocean.stdlib.".length());
         }
+        if ("boolean".equals(type)) return "bool";
+        if ("var".equals(type)) return "variable";
+        if ("val".equals(type)) return "value";
         return type;
     }
 

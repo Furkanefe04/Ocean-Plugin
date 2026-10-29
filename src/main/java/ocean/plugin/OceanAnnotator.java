@@ -661,6 +661,7 @@ public class OceanAnnotator implements Annotator {
         }
 
         // 2. Search in Java packages
+        if (com.intellij.psi.search.ProjectScopeBuilder.getInstance(project) == null) return matches;
         PsiShortNamesCache cache = PsiShortNamesCache.getInstance(project);
         PsiClass[] javaClasses = cache.getClassesByName(className, GlobalSearchScope.allScope(project));
         for (PsiClass jc : javaClasses) {
@@ -2286,8 +2287,8 @@ public class OceanAnnotator implements Annotator {
         for (int i = 0; i < statements.size(); i++) {
             PsiElement stmt = statements.get(i);
             String sText = stmt.getText().trim();
-            boolean isSuperCall = sText.startsWith("super") && sText.substring("super".length()+1).trim().startsWith("(");
-            boolean isThisCall = sText.startsWith("this") && sText.substring("this".length()+1).trim().startsWith("(");
+            boolean isSuperCall = sText.startsWith("super") && sText.substring("super".length()).trim().startsWith("(");
+            boolean isThisCall = sText.startsWith("this") && sText.substring("this".length()).trim().startsWith("(");
             if (isSuperCall || isThisCall) {
                 explicitCtorCalls++;
                 if (firstExplicitCtorStmtIndex == -1) {

@@ -5,6 +5,9 @@ plugins {
     id 'org.jetbrains.intellij.platform' version '2.1.0'
 }
 
+group = 'ocean.plugin'
+version = '1.0.1.2'
+
 repositories {
     mavenCentral()
     intellijPlatform {
@@ -41,10 +44,26 @@ compileJava.dependsOn generateGrammarSource
 
 intellijPlatform {
     pluginConfiguration {
+        version = "1.0.1.2"
         ideaVersion {
             sinceBuild = "233"
             untilBuild = provider { null }
         }
+    }
+
+    publishing {
+        token = providers.environmentVariable("PUBLISH_TOKEN")
+            .orElse(providers.environmentVariable("JETBRAINS_MARKETPLACE_TOKEN"))
+            .orElse(providers.gradleProperty("publishToken"))
+            .orElse(providers.gradleProperty("intellijPlatform.publishing.token"))
+            .orElse(provider {
+                def tokenFile = rootProject.file(".publish-token")
+                if (tokenFile.exists()) {
+                    def content = tokenFile.text.trim()
+                    return content.isEmpty() ? null : content
+                }
+                return null
+            })
     }
 }
 

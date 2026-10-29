@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>ocean.plugin</id>
     <name>Ocean</name>
-    <version>1.0.0</version>
+    <version>1.0.1.2</version>
     <vendor>Furkan</vendor>
 
     <description><![CDATA[
@@ -21,7 +21,20 @@
     ]]></description>
 
     <change-notes><![CDATA[
-        <h3>1.0.0 - Ocean V3 Parity Release</h3>
+        <h3>1.0.1.2 - Linux Run Fixes & Stability</h3>
+        <ul>
+            <li>Fixed run configuration executable selection on Linux.</li>
+            <li>Prevented Windows batch launchers from being selected on Linux and macOS.</li>
+            <li>Improved Ocean executable discovery across supported installation layouts.</li>
+            <li>Improved overall plugin stability.</li>
+        </ul>
+        <h3>1.0.1.0 - Marketplace Branding & Fast Publishing</h3>
+        <ul>
+            <li>Official Ocean brand icon added for JetBrains Marketplace and IDE plugin manager.</li>
+            <li>Configured fast publishing flow via publishPlugin task with token support.</li>
+            <li>General performance and stability enhancements.</li>
+        </ul>
+        <h3>1.0.0.0 - Ocean V3 Parity Release</h3>
         <ul>
             <li>Full synchronization with Ocean V3 core grammar and compiler.</li>
             <li>Added annotation declarations, sealed classes, data classes, async/await syntax support.</li>

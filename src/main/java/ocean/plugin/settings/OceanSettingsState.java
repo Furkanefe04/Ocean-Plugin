@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
         storages = @Storage("OceanSettings.xml")
 )
 public class OceanSettingsState implements PersistentStateComponent<OceanSettingsState> {
-    public String oceanHome = "";
+    public String oceanHome = System.getenv("OCEAN_HOME");
 
     public static OceanSettingsState getInstance() {
         return ApplicationManager.getApplication().getService(OceanSettingsState.class);

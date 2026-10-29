@@ -22,6 +22,8 @@ build/
 .env
 .env.*
 !.env.example
+.publish-token
+publish-token.txt
 *.jks
 *.keystore
 *.p12

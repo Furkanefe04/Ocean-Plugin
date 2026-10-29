@@ -60,6 +60,29 @@ import java.util.stream.Stream;
 
 public class OceanPluginVerificationTest {
 
+    private static final Project DUMMY_PROJECT = (Project) Proxy.newProxyInstance(
+            Project.class.getClassLoader(), new Class<?>[]{Project.class}, (proxy, method, args) -> {
+                return switch (method.getName()) {
+                    case "toString" -> "OceanPluginVerificationTestProject";
+                    case "hashCode" -> System.identityHashCode(proxy);
+                    case "equals" -> proxy == args[0];
+                    case "isDisposed" -> false;
+                    case "getName" -> "OceanPluginVerificationTestProject";
+                    default -> {
+                        Class<?> type = method.getReturnType();
+                        if (type == boolean.class) yield false;
+                        if (type == int.class) yield 0;
+                        if (type == long.class) yield 0L;
+                        if (type == double.class) yield 0.0;
+                        if (type == float.class) yield 0.0f;
+                        if (type == short.class) yield (short) 0;
+                        if (type == byte.class) yield (byte) 0;
+                        if (type == char.class) yield '\0';
+                        yield null;
+                    }
+                };
+            });
+
     private static class ErrorCollector extends BaseErrorListener {
         final List<String> errors = new ArrayList<>();
 
@@ -1546,7 +1569,7 @@ public class OceanPluginVerificationTest {
         Assertions.assertEquals("ocean.stdlib.ScopedValue", OceanTypeHelper.getStdlibAlias("ScopedValue"));
         Assertions.assertEquals("ocean.stdlib.OceanIntList", OceanTypeHelper.getStdlibAlias("OceanIntList"));
         Assertions.assertEquals("ocean.stdlib.OceanDoubleList", OceanTypeHelper.getStdlibAlias("OceanDoubleList"));
-        Assertions.assertEquals("Scanner", OceanTypeHelper.getStdlibAlias("OceanInput"));
+        Assertions.assertEquals("java.util.Scanner", OceanTypeHelper.getStdlibAlias("OceanInput"));
     }
 
     @Test
@@ -2949,7 +2972,7 @@ public class OceanPluginVerificationTest {
 
         @Override
         public @NotNull Project getProject() {
-            return null;
+            return DUMMY_PROJECT;
         }
 
         @Override
@@ -3079,7 +3102,7 @@ public class OceanPluginVerificationTest {
                             return root != null ? root.getChildren() : new PsiElement[0];
                         }
                         case "getProject" -> {
-                            return null;
+                            return DUMMY_PROJECT;
                         }
                         case "getFileType" -> {
                             return OceanFileType.INSTANCE;
@@ -4158,7 +4181,7 @@ public class OceanPluginVerificationTest {
 
         Assertions.assertTrue(OceanScopeDiscovery.isAsyncMethod(methodWithChain));
         String retType = OceanScopeDiscovery.getMethodReturnType(methodWithChain);
-        Assertions.assertEquals("concurrent.CompletableFuture<java.lang.String>", retType);
+        Assertions.assertEquals("java.util.concurrent.CompletableFuture<java.lang.String>", retType);
     }
 
     @Test
@@ -4183,7 +4206,7 @@ public class OceanPluginVerificationTest {
         Assertions.assertTrue(OceanScopeDiscovery.isAsyncMethod(method));
         Assertions.assertTrue(OceanScopeDiscovery.isVoidMethod(method));
         String retType = OceanScopeDiscovery.getMethodReturnType(method);
-        Assertions.assertEquals("concurrent.CompletableFuture<java.lang.Void>", retType);
+        Assertions.assertEquals("java.util.concurrent.CompletableFuture<java.lang.Void>", retType);
     }
 
     @Test
@@ -8741,6 +8764,7 @@ public class OceanPluginVerificationTest {
                     if ("isValid".equals(method.getName()) || "isPhysical".equals(method.getName()))
                         return Boolean.TRUE;
                     if ("getChildren".equals(method.getName())) return new PsiElement[]{parentClass, childClass};
+                    if ("getProject".equals(method.getName())) return DUMMY_PROJECT;
                     return null;
                 });
         parentClass.setCustomPsiFile(file);
@@ -11032,6 +11056,63 @@ public class OceanPluginVerificationTest {
 
         OceanMakeMethodAsyncQuickFix asyncFix = new OceanMakeMethodAsyncQuickFix(awaitToken);
         Assertions.assertEquals("Make enclosing function 'async'", asyncFix.getText());
+    }
+
+    @Test
+    public void testRunState() {
+        Path home = null;
+        try {
+            home = Files.createTempDirectory("ocean-run-state-");
+            Path bat = Files.createFile(home.resolve("ocean.bat"));
+            Path ocean = Files.createFile(home.resolve("ocean"));
+            Assertions.assertEquals(ocean.toFile().getAbsolutePath(), OceanRunProfileState.resolveOceanExecutable(home.toString(), "Linux"));
+            Assertions.assertEquals(bat.toFile().getAbsolutePath(), OceanRunProfileState.resolveOceanExecutable(home.toString(), "Windows 11"));
+            Assertions.assertEquals(ocean.toFile().getAbsolutePath(), OceanRunProfileState.resolveOceanExecutable(home.toString(), "Darwin"));
+        } catch (java.io.IOException e) {
+            throw new AssertionError("Unable to create temporary Ocean home for run-state verification", e);
+        } finally {
+            if (home != null) {
+                try (Stream<Path> paths = Files.walk(home)) {
+                    paths.sorted(Comparator.reverseOrder()).forEach(path -> {
+                        try { Files.deleteIfExists(path); } catch (java.io.IOException e) { throw new RuntimeException(e); }
+                    });
+                } catch (java.io.IOException e) {
+                    throw new AssertionError("Unable to clean temporary Ocean home", e);
+                }
+            }
+        }
+    }
+
+    @Test
+    public void testRunStateUsesPosixExecutableInBinDirectory() throws Exception {
+        Path home = Files.createTempDirectory("ocean-run-state-bin-");
+        try {
+            Path bin = Files.createDirectory(home.resolve("bin"));
+            Path executable = Files.createFile(bin.resolve("ocean"));
+            Files.createFile(home.resolve("ocean.bat"));
+            Assertions.assertEquals(executable.toFile().getAbsolutePath(), OceanRunProfileState.resolveOceanExecutable(home.toString(), "Linux"));
+        } finally {
+            try (Stream<Path> paths = Files.walk(home)) {
+                paths.sorted(Comparator.reverseOrder()).forEach(path -> {
+                    try { Files.deleteIfExists(path); } catch (java.io.IOException e) { throw new RuntimeException(e); }
+                });
+            }
+        }
+    }
+
+    @Test
+    public void testRunStateDoesNotSelectBatchFileOnPosixWhenNoNativeExecutableExists() throws Exception {
+        Path home = Files.createTempDirectory("ocean-run-state-posix-");
+        try {
+            Files.createFile(home.resolve("ocean.bat"));
+            Assertions.assertEquals("ocean", OceanRunProfileState.resolveOceanExecutable(home.toString(), "Linux"));
+        } finally {
+            try (Stream<Path> paths = Files.walk(home)) {
+                paths.sorted(Comparator.reverseOrder()).forEach(path -> {
+                    try { Files.deleteIfExists(path); } catch (java.io.IOException e) { throw new RuntimeException(e); }
+                });
+            }
+        }
     }
 }
 
