@@ -3,6 +3,7 @@ package ocean.plugin.run;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import com.intellij.openapi.ui.TextBrowseFolderListener;
 import com.intellij.util.ui.FormBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,8 +15,8 @@ public class OceanSettingsEditor extends SettingsEditor<OceanRunConfiguration> {
     private final TextFieldWithBrowseButton oceanFileField = new TextFieldWithBrowseButton();
 
     public OceanSettingsEditor() {
-        oceanFileField.addBrowseFolderListener("Select Ocean File", null, null,
-                FileChooserDescriptorFactory.createSingleFileDescriptor("ocean"));
+        oceanFileField.addBrowseFolderListener(new TextBrowseFolderListener(
+                FileChooserDescriptorFactory.createSingleFileDescriptor("ocean")));
         myPanel = new JPanel(new BorderLayout());
         JPanel inner = FormBuilder.createFormBuilder()
                 .addLabeledComponent("Ocean main file:", oceanFileField)

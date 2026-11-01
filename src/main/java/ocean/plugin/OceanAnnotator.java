@@ -5,6 +5,7 @@ import com.intellij.lang.annotation.AnnotationBuilder;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.lang.annotation.HighlightSeverity;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
@@ -661,7 +662,7 @@ public class OceanAnnotator implements Annotator {
         }
 
         // 2. Search in Java packages
-        if (com.intellij.psi.search.ProjectScopeBuilder.getInstance(project) == null) return matches;
+        if (ApplicationManager.getApplication() == null) return matches;
         PsiShortNamesCache cache = PsiShortNamesCache.getInstance(project);
         PsiClass[] javaClasses = cache.getClassesByName(className, GlobalSearchScope.allScope(project));
         for (PsiClass jc : javaClasses) {

@@ -9,6 +9,16 @@ public class OceanLanguage extends Language {
     private OceanLanguage() {
         super("Ocean");
         // Ensure element types are defined for the language early on
-        PSIElementTypeFactory.defineLanguageIElementTypes(this, OceanParser.tokenNames, OceanParser.ruleNames);
+        PSIElementTypeFactory.defineLanguageIElementTypes(this, getTokenNames(), OceanParser.ruleNames);
+    }
+
+    private static String[] getTokenNames() {
+        String[] names = new String[OceanParser.VOCABULARY.getMaxTokenType() + 1];
+        for (int i = 0; i < names.length; i++) {
+            names[i] = OceanParser.VOCABULARY.getLiteralName(i);
+            if (names[i] == null) names[i] = OceanParser.VOCABULARY.getSymbolicName(i);
+            if (names[i] == null) names[i] = "<INVALID>";
+        }
+        return names;
     }
 }

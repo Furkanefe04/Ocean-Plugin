@@ -164,7 +164,7 @@
                             implementationClass="ocean.plugin.OceanParameterInfoHandler"/>
         <runLineMarkerContributor language="Ocean"
                                   implementationClass="ocean.plugin.run.OceanRunLineMarkerContributor"/>
-        <defaultLiveTemplatesProvider implementation="ocean.plugin.OceanLiveTemplatesProvider"/>
+        <defaultLiveTemplates file="/liveTemplates/Ocean.xml"/>
         <liveTemplateContext contextId="OCEAN" implementation="ocean.plugin.OceanTemplateContextType"/>
         <codeInsight.lineMarkerProvider language="Ocean"
                                         implementationClass="ocean.plugin.OceanOverrideLineMarkerProvider"/>

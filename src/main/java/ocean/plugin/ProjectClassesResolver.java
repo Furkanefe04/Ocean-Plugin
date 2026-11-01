@@ -1,6 +1,7 @@
 package ocean.plugin;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.FilenameIndex;
@@ -16,8 +17,9 @@ public class ProjectClassesResolver {
         if (name == null || name.isEmpty()) return;
 
         // Fast path: Search files named name.ocean
-        PsiFile[] files = FilenameIndex.getFilesByName(project, name + ".ocean", GlobalSearchScope.projectScope(project));
-        for (PsiFile psiFile : files) {
+        for (VirtualFile virtualFile : FilenameIndex.getVirtualFilesByName(project, name + ".ocean", GlobalSearchScope.projectScope(project))) {
+            PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
+            if (psiFile == null) continue;
             Collection<PsiElement> classes = PsiTreeUtil.findChildrenOfAnyType(psiFile,
                 OceanClassDeclaration.class, OceanInterfaceDeclaration.class,
                 OceanEnumDeclaration.class, OceanAnnotationDeclaration.class);
