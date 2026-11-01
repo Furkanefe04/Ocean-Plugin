@@ -22,7 +22,7 @@ public class OceanRunLineMarkerContributor extends RunLineMarkerContributor {
                 if (methodNode != null && methodNode.getNode() != null && methodNode.getNode().getElementType() instanceof RuleIElementType mri && mri.getRuleIndex() == OceanParser.RULE_methodDeclaration) {
                     // Ensure this anyId is the actual method name identifier (direct child of methodDeclaration)
                     if (isDirectMethodName(methodNode, parent)) {
-                        return new Info(AllIcons.Actions.Execute, psiElement -> "Run 'main()'", ExecutorAction.getActions(0));
+                        return new Info(AllIcons.Actions.Execute, ExecutorAction.getActions(0), psiElement -> "Run 'main()'");
                     }
                 }
             }

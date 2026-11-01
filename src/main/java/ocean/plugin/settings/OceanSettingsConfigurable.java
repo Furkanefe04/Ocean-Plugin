@@ -3,6 +3,7 @@ package ocean.plugin.settings;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import com.intellij.openapi.ui.TextBrowseFolderListener;
 import com.intellij.util.ui.FormBuilder;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
@@ -21,8 +22,8 @@ public class OceanSettingsConfigurable implements Configurable {
     @Nullable
     @Override
     public JComponent createComponent() {
-        oceanHomeField.addBrowseFolderListener("Select Ocean Home Directory", null, null,
-                FileChooserDescriptorFactory.createSingleFolderDescriptor());
+        oceanHomeField.addBrowseFolderListener(new TextBrowseFolderListener(
+                FileChooserDescriptorFactory.createSingleFolderDescriptor()));
         
         return FormBuilder.createFormBuilder()
                 .addLabeledComponent("Ocean home directory:", oceanHomeField)

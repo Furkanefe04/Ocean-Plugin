@@ -1,6 +1,7 @@
 package ocean.plugin;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.FilenameIndex;
@@ -332,8 +333,9 @@ public class OceanScopeDiscovery {
         try {
             GlobalSearchScope allScope = GlobalSearchScope.allScope(project);
             // 4. File-name search: simpleName.ocean
-            PsiFile[] files = FilenameIndex.getFilesByName(project, simpleName + ".ocean", allScope);
-            for (PsiFile pf : files) {
+            for (VirtualFile virtualFile : FilenameIndex.getVirtualFilesByName(project, simpleName + ".ocean", allScope)) {
+                PsiFile pf = PsiManager.getInstance(project).findFile(virtualFile);
+                if (pf == null) continue;
                 cls = findClassDeep(pf, simpleName);
                 if (cls != null) return cls;
             }
